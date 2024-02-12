@@ -1,25 +1,16 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
-class ApiService {
-  Future<Map<String, dynamic>> login(String phone, String password) async {
-    final response = await http.post(
-      Uri.parse('https://babsaye.com/api/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, String>{
+class AuthService {
+  static Future<Map<String, dynamic>> login(String phone, String password) async {
+    final Uri uri = Uri.parse('https://babsaye.com/api/login');
+    final http.Response response = await http.post(
+      uri,
+      body: {
         'phone': phone,
         'password': password,
-      }),
+      },
     );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      return responseData;
-    } else {
-      throw Exception('Failed to load data');
-    }
+    return json.decode(response.body);
   }
 }
